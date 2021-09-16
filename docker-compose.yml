@@ -1,0 +1,38 @@
+version: '3.5'
+
+services:
+  files_lists:
+    build:
+      context: ./
+      dockerfile: ./docker/Dockerfile
+    image: files_lists
+    container_name: ${APP_NAME}_files_lists
+    restart: unless-stopped
+    working_dir: /var/www/files_lists
+    volumes:
+      - ./:/var/www/files_lists
+  nginx_files_lists:
+    image: nginx:alpine
+    container_name: ${APP_NAME}_files_lists_nginx
+    restart: unless-stopped
+    ports:
+    - "8484:80"
+    volumes:
+      - ./:/var/www/files_lists
+      - ./docker/nginx:/etc/nginx/conf.d
+    depends_on:
+      - files_lists
+  queue:
+    image: files_lists
+    container_name: ${APP_NAME}_worker_files_lists
+    restart: unless-stopped
+    working_dir: /var/www/files_lists
+    command: "php artisan rabbitmq:consume"
+    volumes:
+      - ./:/var/www/files_lists
+    depends_on:
+      - files_lists
+networks:
+  default:
+    external: true
+    name: microservices
