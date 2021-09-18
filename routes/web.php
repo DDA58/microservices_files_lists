@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FilesListController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +15,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('files_lists')->group(static function () {
-
+    Route::get('fileslist', FilesListController::class);
 });

@@ -15,6 +15,7 @@ class CreateListsTable extends Migration
     {
         Schema::create('lists', function (Blueprint $table) {
             $table->integer('file_id')->primary();
+            $table->integer('creator_id')->nullable();
             $table->string('filename', 255);
             $table->string('creator_email', 255);
             $table->string('link', 255);
